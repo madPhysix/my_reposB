@@ -1,0 +1,172 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace _2_directional_linked_list
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Node Orik1 = new Node(1);
+            Node Orik2 = new Node(2);
+            Node Orik3 = new Node(3);
+            Node Orik4 = new Node(4);
+            Node arayaGiren = new Node(0);
+            TwoDirectedLinkedList aiii = new TwoDirectedLinkedList();
+            aiii.addNext(Orik1);
+            aiii.addNext(Orik2);
+            aiii.addNext(Orik3);
+            aiii.addNext(Orik4);
+            aiii.removeByIndex(3);
+            aiii.addIndex(arayaGiren,3);
+            aiii.OutputList();
+
+            
+        }
+
+
+        public class Node
+        {
+            public int value;
+            public Node Next;
+            public Node Previous;
+            public Node(int Value)
+            {
+                value = Value;
+                Previous = null;
+                Next = null;
+            }
+        }
+
+
+        public class TwoDirectedLinkedList
+        {
+            Node Head;
+            Node Tail;
+            private int capacity = 0;
+            public void addNext(Node any)
+            {
+                if (Head == null)
+                {
+                    Head = any;
+                    Tail = Head;
+                    capacity = 1;
+                    return;
+                }
+                Tail.Next = any;
+                any.Previous = Tail;
+                Tail = any;
+                capacity++;
+            }
+
+            public void OutputList()
+            {
+                Node output;
+                output = Head;
+                while (output != null)
+                {
+                    Console.WriteLine(output.value);
+                    output = output.Next;
+                }
+            }
+
+            public void capacityOfList() { Console.WriteLine(capacity); }
+
+
+            public void removeByIndex(int index)
+            {
+                if (capacity < index + 1)
+                {
+                    Console.WriteLine("There is no suich index in our list");
+                    return;
+                }
+                if (index == 0)
+                {
+                    Head.Next.Previous = null;
+                    Head = Head.Next;
+                    capacity--;
+                    return;
+                  
+                }
+
+                if (index == capacity - 1)
+                {
+                    Tail.Previous.Next = null;
+                    capacity--;
+                    return;
+                }
+                Node x = Head;
+                int counter = 0;
+                while (counter < index)
+                {
+                    x = x.Next;
+                    counter++;
+                }
+
+                x.Next.Previous = x.Previous;
+                x.Previous.Next = x.Next;
+                capacity--;
+            }
+
+
+            public void addIndex(Node arayagiren, int index)
+            {
+
+                if(capacity  < index)
+                {
+                    Console.WriteLine("No such index.");
+                    return;
+                }
+
+                Node x = Head;
+                int counter = 0;
+
+                while(counter < index - 1)
+                {
+                    x = x.Next;
+                    counter++;
+                }
+
+                arayagiren.Next = x.Next;
+                arayagiren.Previous = x;
+                x.Next = arayagiren;
+                capacity++;
+            }
+
+            public TwoDirectedLinkedList CopyTheList(TwoDirectedLinkedList anyList)
+            {
+                TwoDirectedLinkedList newList = new TwoDirectedLinkedList();
+                Node runner1 = anyList.Head;
+                Node runner2 = newList.Head;
+
+                runner2.value = runner1.value;
+                while(runner1.Next != null)
+                {
+
+                    runner1 = runner1.Next;
+                    runner2 = runner2.Next;
+                    runner2.value = runner1.value;
+
+                }
+
+                return newList;
+            }
+
+            public void addRange(TwoDirectedLinkedList any)
+            {
+                TwoDirectedLinkedList newlink = any.CopyTheList(any);
+                Tail.Next = any.Head;
+            }
+
+
+
+        }
+
+
+
+    }
+}
